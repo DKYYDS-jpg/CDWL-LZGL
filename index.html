@@ -167,35 +167,76 @@
       </div>
 
       <!-- 数据可视化 -->
+      <!-- 数据可视化（增强版） -->
+<!-- 数据可视化（增强版 · 支持鼠标悬停 / 触摸查看数据） -->
       <div class="data-section reveal">
         <h3 class="subsection-title">📊 数据看今朝</h3>
+
+        <!-- 核心数字高亮区 -->
+        <div class="stat-highlights">
+          <div class="stat-highlight">
+            <div class="stat-number" data-target="54">0</div>
+            <div class="stat-label">红军转战古蔺天数</div>
+          </div>
+          <div class="stat-highlight">
+            <div class="stat-number" data-target="23">0</div>
+            <div class="stat-label">足迹遍及乡镇数</div>
+          </div>
+          <div class="stat-highlight">
+            <div class="stat-number" data-target="4">0</div>
+            <div class="stat-label">四渡赤水次数</div>
+          </div>
+          <div class="stat-highlight">
+            <div class="stat-number" data-target="30" data-suffix="万+">0</div>
+            <div class="stat-label">菜花季累计游客</div>
+          </div>
+        </div>
+
+        <!-- 图表网格 -->
         <div class="data-grid">
+
+          <!-- 柱状图：红色旅游游客量 -->
           <div class="data-card">
-            <div class="data-title">红色旅游游客量</div>
+            <div class="data-title">红色旅游游客量（万人次）</div>
             <div class="data-chart">
               <div class="bar-group">
-                <div class="bar" style="height: 25%"><span>2022</span></div>
-                <div class="bar" style="height: 45%"><span>2023</span></div>
-                <div class="bar" style="height: 70%"><span>2024</span></div>
-                <div class="bar highlight" style="height: 100%"><span>2025</span></div>
+                <div class="bar" data-value="12" data-label="2022年">
+                  <span>2022</span>
+                </div>
+                <div class="bar" data-value="21" data-label="2023年">
+                  <span>2023</span>
+                </div>
+                <div class="bar" data-value="28" data-label="2024年">
+                  <span>2024</span>
+                </div>
+                <div class="bar highlight" data-value="35" data-label="2025年">
+                  <span>2025</span>
+                </div>
               </div>
             </div>
-            <div class="data-value">↑ 30万+ 人次</div>
+            <div class="data-value">↑ 持续增长</div>
             <div class="data-desc">白沙场镇菜花季累计游客量</div>
           </div>
 
+          <!-- 环形图：农产品地理标志 -->
           <div class="data-card">
             <div class="data-title">农产品地理标志</div>
             <div class="data-chart">
               <div class="pie-chart">
                 <svg viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(212,168,67,0.15)" stroke-width="12"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#a01818" stroke-width="12"
-                          stroke-dasharray="100 251" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#d4a843" stroke-width="12"
-                          stroke-dasharray="62 251" stroke-dashoffset="-100" transform="rotate(-90 50 50)"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#8cbc6c" stroke-width="12"
-                          stroke-dasharray="50 251" stroke-dashoffset="-162" transform="rotate(-90 50 50)"/>
+                  <circle class="pie-segment" cx="50" cy="50" r="40" fill="none" stroke="#a01818" stroke-width="12"
+                          stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 50 50)"
+                          data-dash="100" data-offset="0"
+                          data-label="麻辣鸡" data-value="国家地理标志"/>
+                  <circle class="pie-segment" cx="50" cy="50" r="40" fill="none" stroke="#d4a843" stroke-width="12"
+                          stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 50 50)"
+                          data-dash="62" data-offset="-100"
+                          data-label="赶黄草" data-value="国家地理标志"/>
+                  <circle class="pie-segment" cx="50" cy="50" r="40" fill="none" stroke="#8cbc6c" stroke-width="12"
+                          stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 50 50)"
+                          data-dash="50" data-offset="-162"
+                          data-label="丫杈猪 · 古蔺面" data-value="国家地理标志"/>
                 </svg>
               </div>
             </div>
@@ -203,24 +244,41 @@
             <div class="data-desc">麻辣鸡 · 赶黄草 · 丫杈猪 · 古蔺面</div>
           </div>
 
+          <!-- 横向条形图：农产品产值 -->
           <div class="data-card">
-            <div class="data-title">四渡赤水行军</div>
-            <div class="data-chart">
-              <div class="line-chart">
-                <svg viewBox="0 0 200 100">
-                  <polyline points="10,80 60,40 110,70 160,20 190,50"
-                            fill="none" stroke="#d4a843" stroke-width="3"/>
-                  <circle cx="10" cy="80" r="4" fill="#a01818"/>
-                  <circle cx="60" cy="40" r="4" fill="#a01818"/>
-                  <circle cx="110" cy="70" r="4" fill="#a01818"/>
-                  <circle cx="160" cy="20" r="4" fill="#a01818"/>
-                  <circle cx="190" cy="50" r="4" fill="#a01818"/>
-                </svg>
+            <div class="data-title">2025 农产品产值（亿元）</div>
+            <div class="data-chart-horizontal">
+              <div class="h-bar-row" data-label="古蔺甜橙" data-value="8.2 亿元">
+                <div class="h-bar-label">甜橙</div>
+                <div class="h-bar-track"><div class="h-bar-fill" data-value="8.2" data-max="10"></div></div>
+                <div class="h-bar-value">8.2</div>
+              </div>
+              <div class="h-bar-row" data-label="古蔺麻辣鸡" data-value="5.6 亿元">
+                <div class="h-bar-label">麻辣鸡</div>
+                <div class="h-bar-track"><div class="h-bar-fill" data-value="5.6" data-max="10"></div></div>
+                <div class="h-bar-value">5.6</div>
+              </div>
+              <div class="h-bar-row" data-label="古蔺赶黄草" data-value="3.4 亿元">
+                <div class="h-bar-label">赶黄草</div>
+                <div class="h-bar-track"><div class="h-bar-fill" data-value="3.4" data-max="10"></div></div>
+                <div class="h-bar-value">3.4</div>
+              </div>
+              <div class="h-bar-row" data-label="古蔺面" data-value="2.8 亿元">
+                <div class="h-bar-label">古蔺面</div>
+                <div class="h-bar-track"><div class="h-bar-fill" data-value="2.8" data-max="10"></div></div>
+                <div class="h-bar-value">2.8</div>
               </div>
             </div>
-            <div class="data-value">54 天</div>
-            <div class="data-desc">三进古蔺 · 转战23个乡镇</div>
+            <div class="data-value">20.0 亿</div>
+            <div class="data-desc">古蔺特色农产品年总产值</div>
           </div>
+
+        </div>
+
+        <!-- 图表 tooltip -->
+        <div class="chart-tooltip" id="chartTooltip">
+          <div class="tooltip-label"></div>
+          <div class="tooltip-value"></div>
         </div>
       </div>
 
@@ -266,7 +324,7 @@
       <!-- 文旅新貌 -->
       <h3 class="subsection-title reveal">🏞️ 文旅新貌</h3>
       <div class="modern-grid">
-        <div class="modern-card reveal reveal-delay-1" data-popup="太平古镇" data-desc="太平古镇：国家AAAA级旅游景区，被誉为“没有围墙的红色博物馆”｜渡河兵力 1.2万人｜架设浮桥 3座｜1935年2月">
+        <div class="modern-card reveal reveal-delay-1" data-id="taiping" data-popup="太平古镇" data-desc="太平古镇：国家AAAA级旅游景区，被誉为“没有围墙的红色博物馆”｜渡河兵力 1.2万人｜架设浮桥 3座｜1935年2月">
           <div class="card-image">
             <img src="images/太平古镇.png" alt="太平古镇全景，国家AAAA级旅游景区" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -281,7 +339,7 @@
           </div>
         </div>
 
-        <div class="modern-card reveal reveal-delay-2" data-popup="长征历史步道" data-desc="古蔺县长征历史步道（太平二郎段）：川南黔北第一条长征历史步道｜全长 26公里｜起点太平渡｜止于二郎滩">
+        <div class="modern-card reveal reveal-delay-2" data-id="trail" data-popup="长征历史步道" data-desc="古蔺县长征历史步道（太平二郎段）：川南黔北第一条长征历史步道｜全长 26公里｜起点太平渡｜止于二郎滩">
           <div class="card-image">
             <img src="images/长征历史步道.png" alt="长征历史步道蜿蜒山路" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -296,7 +354,7 @@
           </div>
         </div>
 
-        <div class="modern-card reveal reveal-delay-3" data-popup="观文千鸟湖" data-desc="观文镇千鸟湖：古蔺新兴网红打卡地｜玻璃观景台｜万只候鸟越冬｜生态旅游典范">
+        <div class="modern-card reveal reveal-delay-3" data-id="lake"  data-popup="观文千鸟湖" data-desc="观文镇千鸟湖：古蔺新兴网红打卡地｜玻璃观景台｜万只候鸟越冬｜生态旅游典范">
           <div class="card-image">
             <img src="images/观文千鸟湖.png" alt="观文千鸟湖玻璃观景台与湖面" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -311,13 +369,13 @@
           </div>
         </div>
 
-        <div class="modern-card reveal" data-popup="白沙场镇菜花季" data-desc="白沙场镇：菜花文化旅游季已连续举办16届｜累计游客超30万人次｜火锅搬进花田｜农旅融合">
+        <div class="modern-card reveal" data-id="canola" data-popup="白沙场镇菜花季" data-desc="白沙场镇：菜花文化旅游季已连续举办16届｜累计游客超30万人次｜火锅搬进花田｜农旅融合">
           <div class="card-image">
             <img src="images/白沙场镇菜花季.png" alt="白沙场镇万亩油菜花海" loading="lazy">
             <div class="card-image-overlay"></div>
           </div>
           <div class="card-body">
-            <h3 class="card-title">白沙场镇菜花季</h3>
+            <h3 class="card-title">白沙菜花季</h3>
             <p class="card-desc">连续16届，累计游客超30万人次</p>
             <div class="tag-list">
               <span class="tag">农旅融合</span>
@@ -330,7 +388,7 @@
       <!-- 美食古蔺 -->
       <h3 class="subsection-title reveal" style="margin-top:70px;">🍜 美食古蔺</h3>
       <div class="food-grid">
-        <div class="food-card reveal reveal-delay-1" data-popup="古蔺麻辣鸡" data-desc="古蔺麻辣鸡：国家地理标志证明商标｜古法卤制｜麻辣鲜香｜古蔺待客头道菜">
+        <div class="food-card reveal reveal-delay-1" data-id="chicken" data-popup="古蔺麻辣鸡" data-desc="古蔺麻辣鸡：国家地理标志证明商标｜古法卤制｜麻辣鲜香｜古蔺待客头道菜">
           <div class="food-image">
             <img src="images/麻辣鸡.png" alt="古蔺麻辣鸡特写" loading="lazy">
           </div>
@@ -341,7 +399,7 @@
           </div>
         </div>
 
-        <div class="food-card reveal reveal-delay-2" data-popup="古蔺赶黄草" data-desc="古蔺赶黄草：全国赶黄草地理认证产区｜药食同源｜清热解毒">
+        <div class="food-card reveal reveal-delay-2" data-id="herb" data-popup="古蔺赶黄草" data-desc="古蔺赶黄草：全国赶黄草地理认证产区｜药食同源｜清热解毒">
           <div class="food-image">
             <img src="images/赶黄草.png" alt="古蔺赶黄草药材" loading="lazy">
           </div>
@@ -352,7 +410,7 @@
           </div>
         </div>
 
-        <div class="food-card reveal reveal-delay-3" data-popup="古蔺丫杈猪" data-desc="古蔺丫杈猪：国家地理标志证明商标｜本地优良猪种｜老腊肉闻名">
+        <div class="food-card reveal reveal-delay-3" data-id="pork"  data-popup="古蔺丫杈猪" data-desc="古蔺丫杈猪：国家地理标志证明商标｜本地优良猪种｜老腊肉闻名">
           <div class="food-image">
             <img src="images/腊肉.png" alt="古蔺丫杈猪老腊肉" loading="lazy">
           </div>
@@ -363,7 +421,7 @@
           </div>
         </div>
 
-        <div class="food-card reveal" data-popup="古蔺手工面" data-desc="古蔺面：国家地理标志证明商标｜手工面地理认证产区｜筋道爽滑">
+        <div class="food-card reveal" data-id="noodle"  data-popup="古蔺手工面" data-desc="古蔺面：国家地理标志证明商标｜手工面地理认证产区｜筋道爽滑">
           <div class="food-image">
             <img src="images/古蔺面.png" alt="古蔺手工面" loading="lazy">
           </div>
@@ -374,7 +432,7 @@
           </div>
         </div>
 
-        <div class="food-card reveal reveal-delay-1" data-popup="郎酒" data-desc="郎酒：古蔺金字招牌｜与麻辣鸡、手工面并称古蔺三宝｜中国两大酱香白酒之一">
+        <div class="food-card reveal reveal-delay-1" data-id="wine" data-popup="郎酒" data-desc="郎酒：古蔺金字招牌｜与麻辣鸡、手工面并称古蔺三宝｜中国两大酱香白酒之一">
           <div class="food-image">
             <img src="images/郎酒.png" alt="郎酒酒瓶特写" loading="lazy">
           </div>
@@ -385,7 +443,7 @@
           </div>
         </div>
 
-        <div class="food-card reveal reveal-delay-2" data-popup="古蔺甜橙" data-desc="古蔺甜橙：古蔺5+N现代农业体系主导产业｜赤水河谷独特气候｜皮薄多汁">
+        <div class="food-card reveal reveal-delay-2" data-id="orange" data-popup="古蔺甜橙" data-desc="古蔺甜橙：古蔺5+N现代农业体系主导产业｜赤水河谷独特气候｜皮薄多汁">
           <div class="food-image">
             <img src="images/甜橙.png" alt="古蔺甜橙挂枝" loading="lazy">
           </div>
@@ -400,7 +458,7 @@
       <!-- 非遗传承 -->
       <h3 class="subsection-title reveal" style="margin-top:70px;">🏮 非遗传承</h3>
       <div class="modern-grid">
-        <div class="modern-card reveal" data-popup="古蔺花灯" data-desc="古蔺花灯：国家级非物质文化遗产｜俗称扭扭灯｜要逗要笑、要拽要闹、要唱要跳｜花灯之乡">
+        <div class="modern-card reveal" data-id="lantern" data-popup="古蔺花灯" data-desc="古蔺花灯：国家级非物质文化遗产｜俗称扭扭灯｜要逗要笑、要拽要闹、要唱要跳｜花灯之乡">
           <div class="card-image">
             <img src="images/花灯.png" alt="古蔺花灯表演" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -415,7 +473,7 @@
           </div>
         </div>
 
-        <div class="modern-card reveal reveal-delay-1" data-popup="黄荆根雕" data-desc="古蔺黄荆根雕工艺：传统美术类非遗｜黄荆老林天然树根｜依形就势｜古朴自然">
+        <div class="modern-card reveal reveal-delay-1" data-id="woodcarving" data-popup="黄荆根雕" data-desc="古蔺黄荆根雕工艺：传统美术类非遗｜黄荆老林天然树根｜依形就势｜古朴自然">
           <div class="card-image">
             <img src="images/黄荆根雕.png" alt="黄荆根雕作品" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -430,7 +488,7 @@
           </div>
         </div>
 
-        <div class="modern-card reveal reveal-delay-2" data-popup="马嘶苗族乡茶文化" data-desc="马嘶苗族乡：苗乡文化传承｜非遗技艺活化｜生态茶园建设｜红色基因赓续">
+        <div class="modern-card reveal reveal-delay-2" data-id="tea" data-popup="马嘶苗族乡茶文化" data-desc="马嘶苗族乡：苗乡文化传承｜非遗技艺活化｜生态茶园建设｜红色基因赓续">
           <div class="card-image">
             <img src="images/马嘶茶文化.png" alt="马嘶苗族乡生态茶园" loading="lazy">
             <div class="card-image-overlay"></div>
@@ -986,6 +1044,45 @@
       </p>
     </div>
   </section> -->
+
+
+  <!-- 留言板 -->
+  <section class="section-contact" id="contact">
+    <div class="section-inner">
+      <span class="section-label reveal">反馈 · 留言</span>
+      <h2 class="section-title reveal">给作者<span class="highlight">留言</span></h2>
+      <p class="section-intro reveal">
+        如果你对“重走长征路 · 古蔺”这个作品有任何建议、想法或鼓励，欢迎留下你的留言。
+      </p>
+
+      <!-- 留言表单 -->
+      <form id="contact-form" class="contact-form reveal">
+        <div class="form-row">
+          <label for="contact-name">昵称</label>
+          <input type="text" id="contact-name" name="name" placeholder="你的昵称（可选）" maxlength="20">
+        </div>
+        <div class="form-row">
+          <label for="contact-message">留言内容 <span class="required">*</span></label>
+          <textarea id="contact-message" name="message" rows="4" placeholder="写下你想说的话..." maxlength="500" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="btnSubmit">发送留言</button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+
+      <!-- 留言列表 -->
+      <div class="message-list-wrap reveal">
+        <h3 class="message-list-title">
+          <span>💬 大家的留言</span>
+          <span class="message-count" id="messageCount">0 条</span>
+        </h3>
+        <div class="message-list" id="messageList">
+          <!-- JS 动态生成 -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
 
   <!-- 弹窗 -->
   <div class="overlay" id="overlay"></div>
