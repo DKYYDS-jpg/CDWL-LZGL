@@ -8,16 +8,57 @@
   const loader = document.getElementById('loader');
   if (!gate) return;
 
+  /* ---- 判断是否从详情页返回 ---- */
+  const returning = sessionStorage.getItem('skip_entry') === 'true';
+  if (returning) {
+    sessionStorage.removeItem('skip_entry');
+
+    // 直接跳过封面和加载动画
+    gate.style.display = 'none';
+    if (loader) loader.style.display = 'none';
+    document.body.classList.remove('locked');
+
+    // 恢复滚动位置
+    const scrollPos = parseInt(sessionStorage.getItem('home_scroll') || '0', 10);
+    if (scrollPos > 0) {
+      const restore = () => window.scrollTo(0, scrollPos);
+      restore();
+      setTimeout(restore, 100);
+      setTimeout(restore, 400);
+      setTimeout(restore, 900);
+    }
+
+    // 恢复背景音乐的播放位置和状态
+    const bgMusic = document.getElementById('bgMusic');
+    if (bgMusic) {
+      const musicTime = parseFloat(sessionStorage.getItem('music_time') || '0');
+      const musicWasPlaying = sessionStorage.getItem('music_playing') === 'true';
+      bgMusic.currentTime = musicTime;
+      bgMusic.volume = 0.35;
+      if (musicWasPlaying) {
+        bgMusic.play().catch(err => {
+          console.warn('返回主页音乐恢复失败：', err);
+        });
+      }
+
+      // 离开主页前保存音乐状态（跳转到详情页时已经保存过，这里是兜底）
+      window.addEventListener('beforeunload', () => {
+        sessionStorage.setItem('music_time', bgMusic.currentTime);
+        sessionStorage.setItem('music_playing', !bgMusic.paused);
+      });
+    }
+    return;
+  }
+
+  /* ---- 首次进入的正常流程 ---- */
   let entered = false;
 
   function enter() {
     if (entered) return;
     entered = true;
 
-    // 1) 封面闪光反馈
     gate.classList.add('flash');
 
-    // 2) 播放背景音乐（用户点击=用户激活，100% 成功）
     const bgMusic = document.getElementById('bgMusic');
     if (bgMusic) {
       bgMusic.muted = false;
@@ -29,25 +70,20 @@
           bgMusic.volume = vol;
           if (vol >= 0.35) clearInterval(fade);
         }, 60);
-        console.log('✅ 背景音乐已开始播放');
       }).catch(err => {
         console.warn('音乐播放失败：', err);
       });
     }
 
-    // 3) 400ms 后封面淡出，加载动画同时显示
     setTimeout(() => {
       gate.classList.add('hide');
       document.body.classList.remove('locked');
       if (loader) loader.classList.add('show');
-
       setTimeout(() => {
         gate.style.display = 'none';
       }, 1000);
     }, 400);
 
-    // 4) 加载动画走完 → 淡出 → 主页面呈现
-    //    封面 400ms + 进度条 2200ms + 停留 400ms = 3000ms
     setTimeout(() => {
       if (loader) loader.classList.add('hide');
     }, 3000);
@@ -266,10 +302,23 @@ document.getElementById('popupClose').addEventListener('click', closePopup);
 overlay.addEventListener('click', closePopup);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopup(); });
 
-/* ==================== 7. 卡片点击 ==================== */
-document.querySelectorAll('.modern-card[data-popup], .food-card[data-popup]').forEach(card => {
+/* ==================== 7. 卡片点击 → 跳转详情页 ==================== */
+document.querySelectorAll('.modern-card[data-id], .food-card[data-id]').forEach(card => {
   card.addEventListener('click', function () {
-    showPopup(this.dataset.popup, this.dataset.desc);
+    const id = this.dataset.id;
+    if (id) {
+      // 记录当前滚动位置
+      sessionStorage.setItem('home_scroll', window.scrollY);
+      // 标记"从详情页返回时跳过封面和加载"
+      sessionStorage.setItem('skip_entry', 'true');
+      // 记录音乐播放位置和状态
+      const bgMusic = document.getElementById('bgMusic');
+      if (bgMusic) {
+        sessionStorage.setItem('music_time', bgMusic.currentTime);
+        sessionStorage.setItem('music_playing', !bgMusic.paused);
+      }
+      window.location.href = 'detail.html?id=' + encodeURIComponent(id);
+    }
   });
 });
 
@@ -497,3 +546,299 @@ if (scrollHintEl) {
     document.getElementById('posterAdopt').textContent = adopted ? '是' : '否';
   }
 })();
+
+/* ==================== 14. 数据可视化增强 ==================== */
+(function initDataAnimations() {
+  const dataSection = document.querySelector('.data-section');
+  if (!dataSection) return;
+
+  let animated = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !animated) {
+        animated = true;
+        animateAll();
+      }
+    });
+  }, { threshold: 0.25 });
+
+  observer.observe(dataSection);
+
+  function animateAll() {
+    document.querySelectorAll('.stat-number').forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 50));
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = current + (current === target ? suffix : '');
+      }, 30);
+    });
+
+    const bars = document.querySelectorAll('.bar-group .bar');
+    const maxBarValue = Math.max(...Array.from(bars).map(b => parseFloat(b.dataset.value || 0)));
+    bars.forEach((bar, i) => {
+      const value = parseFloat(bar.dataset.value || 0);
+      const heightPercent = (value / maxBarValue) * 100;
+      setTimeout(() => {
+        bar.style.height = heightPercent + '%';
+      }, i * 140);
+    });
+
+    document.querySelectorAll('.pie-segment').forEach((seg, i) => {
+      const dash = seg.dataset.dash;
+      const offset = seg.dataset.offset;
+      setTimeout(() => {
+        seg.setAttribute('stroke-dasharray', dash + ' 251');
+        seg.setAttribute('stroke-dashoffset', offset);
+      }, i * 220);
+    });
+
+    document.querySelectorAll('.h-bar-fill').forEach((fill, i) => {
+      const value = parseFloat(fill.dataset.value || 0);
+      const max = parseFloat(fill.dataset.max || 10);
+      const widthPercent = (value / max) * 100;
+      setTimeout(() => {
+        fill.style.width = widthPercent + '%';
+      }, i * 130);
+    });
+  }
+})();
+
+/* ==================== 15. 图表 hover / touch 交互 ==================== */
+(function initChartInteraction() {
+  const tooltip = document.getElementById('chartTooltip');
+  if (!tooltip) return;
+
+  const tooltipLabel = tooltip.querySelector('.tooltip-label');
+  const tooltipValue = tooltip.querySelector('.tooltip-value');
+
+  function showTooltip(x, y, label, value) {
+    tooltipLabel.textContent = label || '';
+    tooltipValue.textContent = value || '';
+
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.opacity = '0';
+    tooltip.style.left = '0px';
+    tooltip.style.top = '0px';
+    tooltip.classList.add('show');
+
+    const rect = tooltip.getBoundingClientRect();
+
+    let left = x + 14;
+    let top = y - rect.height - 14;
+
+    if (left + rect.width > window.innerWidth - 10) {
+      left = x - rect.width - 14;
+    }
+    if (left < 10) {
+      left = 10;
+    }
+    if (top < 10) {
+      top = y + 22;
+    }
+
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+    tooltip.style.visibility = '';
+    tooltip.style.opacity = '';
+  }
+
+  function hideTooltip() {
+    tooltip.classList.remove('show');
+  }
+
+  function bindInteractive(el, getLabel, getValue) {
+    el.addEventListener('mouseenter', (e) => {
+      showTooltip(e.clientX, e.clientY, getLabel(), getValue());
+    });
+    el.addEventListener('mousemove', (e) => {
+      showTooltip(e.clientX, e.clientY, getLabel(), getValue());
+    });
+    el.addEventListener('mouseleave', hideTooltip);
+
+    el.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      showTooltip(t.clientX, t.clientY, getLabel(), getValue());
+    }, { passive: true });
+    el.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      showTooltip(t.clientX, t.clientY, getLabel(), getValue());
+    }, { passive: true });
+    el.addEventListener('touchend', () => {
+      setTimeout(hideTooltip, 900);
+    });
+  }
+
+  document.querySelectorAll('.bar-group .bar').forEach(el => {
+    const year = el.querySelector('span')?.textContent || '';
+    const value = el.dataset.value || '0';
+    bindInteractive(el, () => year + ' 年', () => value + ' 万人次');
+  });
+
+  document.querySelectorAll('.pie-segment').forEach(el => {
+    bindInteractive(el, () => el.dataset.label || '', () => el.dataset.value || '');
+  });
+
+  document.querySelectorAll('.h-bar-row').forEach(el => {
+    bindInteractive(el, () => el.dataset.label || '', () => el.dataset.value || '');
+  });
+
+  document.querySelectorAll('.stat-highlight').forEach(el => {
+    const numEl = el.querySelector('.stat-number');
+    const labelEl = el.querySelector('.stat-label');
+    bindInteractive(el,
+      () => labelEl ? labelEl.textContent : '',
+      () => numEl ? numEl.textContent : ''
+    );
+  });
+
+  window.addEventListener('scroll', hideTooltip, { passive: true });
+
+  document.addEventListener('touchstart', (e) => {
+    if (!e.target.closest('.bar, .pie-segment, .h-bar-row, .stat-highlight')) {
+      hideTooltip();
+    }
+  }, { passive: true });
+})();
+
+
+/* ==================== 16. 留言板（纯前端演示 + localStorage） ==================== */
+(function initContactForm() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+
+  const btnSubmit = document.getElementById('btnSubmit');
+  const formStatus = document.getElementById('formStatus');
+  const messageList = document.getElementById('messageList');
+  const messageCount = document.getElementById('messageCount');
+
+  const STORAGE_KEY = 'gulin_messages';
+
+  /* ---- 读取所有留言 ---- */
+  function loadMessages() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /* ---- 保存留言 ---- */
+  function saveMessages(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  /* ---- 渲染留言列表 ---- */
+  function renderMessages() {
+    const list = loadMessages();
+
+    if (list.length === 0) {
+      messageList.innerHTML = `
+        <div class="message-empty">
+          <div class="message-empty-icon">📭</div>
+          <div class="message-empty-text">还没有留言，来做第一个吧～</div>
+        </div>
+      `;
+      messageCount.textContent = '0 条';
+      return;
+    }
+
+    // 按时间倒序（最新在上）
+    const sorted = [...list].sort((a, b) => b.time - a.time);
+
+    messageList.innerHTML = sorted.map(msg => `
+      <div class="message-item">
+        <div class="message-avatar">${msg.name.charAt(0).toUpperCase()}</div>
+        <div class="message-content">
+          <div class="message-head">
+            <span class="message-name">${escapeHtml(msg.name)}</span>
+            <span class="message-time">${formatTime(msg.time)}</span>
+          </div>
+          <div class="message-text">${escapeHtml(msg.text)}</div>
+        </div>
+      </div>
+    `).join('');
+
+    messageCount.textContent = list.length + ' 条';
+  }
+
+  /* ---- 防 XSS ---- */
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ---- 时间格式化 ---- */
+  function formatTime(timestamp) {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    if (diff < minute) return '刚刚';
+    if (diff < hour) return Math.floor(diff / minute) + ' 分钟前';
+    if (diff < day) return Math.floor(diff / hour) + ' 小时前';
+    if (diff < 7 * day) return Math.floor(diff / day) + ' 天前';
+
+    const d = new Date(timestamp);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  /* ---- 提交留言 ---- */
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameInput = form.querySelector('[name="name"]');
+    const messageInput = form.querySelector('[name="message"]');
+
+    const name = nameInput.value.trim() || '匿名访客';
+    const message = messageInput.value.trim();
+
+    if (!message) {
+      formStatus.textContent = '❌ 请填写留言内容';
+      formStatus.className = 'form-status error';
+      return;
+    }
+
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = '发送中...';
+
+    setTimeout(() => {
+      // 保存留言
+      const list = loadMessages();
+      list.push({
+        name: name,
+        text: message,
+        time: Date.now()
+      });
+      saveMessages(list);
+
+      // 重新渲染
+      renderMessages();
+
+      // 状态提示
+      formStatus.textContent = `✅ 感谢 ${name} 的留言，已收到你的反馈！`;
+      formStatus.className = 'form-status success';
+      btnSubmit.textContent = '已发送 ✓';
+      form.reset();
+
+      setTimeout(() => {
+        btnSubmit.textContent = '发送留言';
+        btnSubmit.disabled = false;
+      }, 3000);
+    }, 600);
+  });
+
+  /* ---- 初始化 ---- */
+  renderMessages();
+})();
+
