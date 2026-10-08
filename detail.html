@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>详情 | 重走长征路 · 古蔺</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="detail-page">
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="audio/党政国家宣传片-奋斗励志-红色精神_爱给网_aigei_com.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="detail-loading" id="detailLoading">
+    <div class="loader-star">★</div>
+  </div>
+
+  <div class="detail-wrap" id="detailWrap" style="display:none;">
+
+    <!-- 顶部返回 -->
+    <header class="detail-header">
+      <a href="index.html" class="detail-back">← 返回主页</a>
+      <div class="detail-category" id="detailCategory"></div>
+    </header>
+
+    <!-- 主图 -->
+    <!-- 主图轮播 -->
+    <section class="detail-hero">
+      <div class="carousel" id="detailCarousel">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- JS 动态生成 -->
+        </div>
+
+        <!-- 左右箭头 -->
+        <button class="carousel-arrow prev" id="carouselPrev" aria-label="上一张">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <button class="carousel-arrow next" id="carouselNext" aria-label="下一张">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+
+        <!-- 圆点指示器 -->
+        <div class="carousel-dots" id="carouselDots"></div>
+
+        <!-- 底部渐变遮罩 + 标题 -->
+        <div class="detail-hero-overlay"></div>
+        <div class="detail-hero-text">
+          <h1 id="detailTitle"></h1>
+          <p id="detailSubtitle"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 正文 -->
+    <section class="detail-body">
+      <p class="detail-intro" id="detailIntro"></p>
+      <div class="detail-content" id="detailContent"></div>
+      <div class="detail-stats" id="detailStats"></div>
+    </section>
+
+    <!-- 底部返回 -->
+    <section class="detail-footer">
+      <a href="index.html" class="back-home-btn">返回主页 · 继续探索</a>
+    </section>
+
+  </div>
+
+  <!-- 图片灯箱 -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-overlay"></div>
+
+    <!-- 关闭按钮 -->
+    <button class="lightbox-close" id="lightboxClose" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- 上一张 -->
+    <button class="lightbox-arrow lightbox-prev" id="lightboxPrev" aria-label="上一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+
+    <!-- 下一张 -->
+    <button class="lightbox-arrow lightbox-next" id="lightboxNext" aria-label="下一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+
+    <!-- 图片 -->
+    <div class="lightbox-image-wrap">
+      <img id="lightboxImage" src="" alt="">
+    </div>
+
+    <!-- 计数 -->
+    <div class="lightbox-counter" id="lightboxCounter">1 / 3</div>
+  </div>
+
+  <script src="./js/detail.js"></script>
+</body>
+</html>
